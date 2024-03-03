@@ -3,6 +3,7 @@ dotenv.config();
 
 import bodyParser from "body-parser";
 import express, { Request, Response, NextFunction } from "express";
+import morgan from "morgan";
 
 import { ApiError } from "./utils/AppError";
 import { globalErrorHandler } from "./middlewares/errorMiddleware";
@@ -12,6 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(morgan('dev'))
 app.use("/", (req, res, next) => {
   res.send("hello abood");
 });
