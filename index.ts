@@ -1,13 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
-import express,{ Request, Response, NextFunction} from "express";
+import express, { Request, Response, NextFunction, response } from "express";
 import { ApiError } from "./utils/AppError";
 import { globalErrorHandler } from "./middlewares/errorMiddleware";
-import {mountRoutes} from "./services/app.service";
+import { mountRoutes } from "./services/app.service";
+import { connectToDB } from "./db/db.config";
 
+connectToDB();
 const app = express();
-
-mountRoutes(app)
+mountRoutes(app);
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(
     new ApiError(
@@ -21,14 +22,14 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 // expected errors (prgram error)
 app.use(globalErrorHandler);
 
-const port =  process.env.PORT||3000;
-
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on  ${port}`);
 });
 
 // may come from front-end side or back-end side because of promises
 process.on("unhandledRejection", (reason) => {
+  console.log(reason);
   console.warn("UNHANDLED REJECTION! 💥 Shutting down...");
   //when server response to all other requests
   server.close(() => {

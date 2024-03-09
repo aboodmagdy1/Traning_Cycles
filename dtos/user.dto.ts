@@ -22,7 +22,7 @@ class PasswordMatches implements ValidatorConstraintInterface {
         return "confirmPassword must match password";
     }
 }
-export class CreateUserDto {
+export class SignUpDto {
     @IsNotEmpty()
     @IsString()
     name: string;
@@ -45,6 +45,27 @@ export class CreateUserDto {
     @IsString()
     @Validate(PasswordMatches,{ message: "confirmPassword must match password" })
     confirmPassword:string
+}
+
+export class CreateUserDto {
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+
+    @IsNotEmpty()
+    @IsPhoneNumber()
+    phone: string;
+
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Length(6,15,{message:"password must be from 6-15 char"})
+    password: string;
 }
 
 
