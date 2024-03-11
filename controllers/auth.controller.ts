@@ -9,20 +9,9 @@ import {ApiError} from "../utils/AppError";
 
 export const signUp = async (req:Request,res:Response,next:NextFunction)=>{
 
-    //1)check if any validation errors
-    const singupInputs =plainToClass(SignUpDto,req.body)
-    const inputErrors =  await validate(singupInputs,{
-        validationError:{target:true}
-    })
-
-    if(inputErrors.length >0){
-        return res.status(400).json(inputErrors)
-    }
-
-
-
+    //1) validate the inputs (with middleware)
     //2)check if user exist before
-    const {name,phone,password,email} = singupInputs
+    const {name,phone,password,email} = req.body
     const existUser = await User.findOne({email:email})
     if(existUser !==null){
      return    next(new ApiError(
