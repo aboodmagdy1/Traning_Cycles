@@ -46,6 +46,17 @@ export class SignUpDto {
     @Validate(PasswordMatches,{ message: "confirmPassword must match password" })
     confirmPassword:string
 }
+export class LogInDto {
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Length(6,15,{message:"incorrect password syntax"})
+    password: string;
+}
 
 export class CreateUserDto {
     @IsNotEmpty()

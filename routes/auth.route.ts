@@ -1,11 +1,12 @@
 import express from "express";
 import {validationMiddleware} from "../middlewares/validation.middleware";
-import {SignUpDto} from "../dtos/user.dto";
-import {signUp} from "../controllers/auth.controller";
+import {LogInDto, SignUpDto} from "../dtos/user.dto";
+import {logIn, signUp} from "../controllers/auth.controller";
 
-export const authRoute = express.Router()
+export const authRouter = express.Router()
 
-authRoute.post('/signup',validationMiddleware(SignUpDto),signUp)
+authRouter.post('/signup',validationMiddleware(SignUpDto),signUp)
+authRouter.post('/login',validationMiddleware(LogInDto),logIn)
 
 
 
