@@ -13,7 +13,9 @@ export const createUser =async (createUserInputs:CreateUserDto)=>{
         name ,
         email,
         phone,
-        password:hashedPassword
+        password:hashedPassword,
+        resetCode: undefined,
+        resetCodeExpiry: undefined
     })
    return newUser
 

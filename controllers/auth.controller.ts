@@ -4,7 +4,8 @@ import {User} from "../models/user.model";
 import {ApiError} from "../utils/AppError";
 import bcrypt from "bcrypt";
 import {createToken} from "../utils/createToken";
-import {use} from "passport";
+import {generateResetCode} from "../utils/resetCode";
+import {sendEmail} from "../utils/sendEmails";
 
 export const signUp = async (req:Request,res:Response,next:NextFunction)=>{
 
@@ -50,4 +51,53 @@ export const logIn = async (req:Request,res:Response,next:NextFunction)=>{
             status:"success",
             token:token
         })
+}
+
+
+export const forgetPassword =  async (req:Request,res:Response,next:NextFunction)=>{
+   //1)validate inputs by validation middleware
+   //2)take email from user
+    const {email} = req.body
+   //3)check if user with this email is exist
+    const user = await User.findOne({email:email})
+    if(user === null){
+        return res.status(400).json({
+            status:'failed',
+            message:"incorrect email (no user with this email ) "
+        })
+    }
+   //4)generate reset code and save it in DB(cache soon)  it
+    const {hashedResetCode,expireIn,code} = generateResetCode()
+    user.resetCode = hashedResetCode
+    user.resetCodeExpiry = expireIn
+     await user.save()
+   //5)send reset code by email
+    const emailMessage =` Hi ${user.name},
+     \nWe received a request to reset the password on your Traning  Account 
+     \n\n ${code}
+      \n\n Enter this code to complete the reset password operation `;
+    try{
+        await sendEmail({
+            to:email,
+            subject:"Your Password Reset Code (valid for 5 minutes) ",
+            message:emailMessage
+        })
+    }
+    catch (e){
+        user.resetCode= undefined
+        user.resetCodeExpiry = undefined
+        await user.save()
+
+        return    next(new ApiError(
+            "BadRequest",
+            400,
+            true,
+            ` faield to send Email  `
+        ))
+    }
+   // 6) send resposne to user
+    return res.status(200).json({
+        status:'success',
+        message:"please check you email"
+    })
 }
