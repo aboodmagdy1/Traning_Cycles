@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import {createToken} from "../utils/createToken";
 import {generateResetCode} from "../utils/resetCode";
 import {sendEmail} from "../utils/sendEmails";
+import * as crypto from "crypto";
 
 export const signUp = async (req:Request,res:Response,next:NextFunction)=>{
 
@@ -101,3 +102,32 @@ export const forgetPassword =  async (req:Request,res:Response,next:NextFunction
         message:"please check you email"
     })
 }
+
+export const verifyResetCode =  async (req:Request,res:Response,next:NextFunction)=>{
+    //1)validate inputs by validation middleware
+    //2)take email from user
+    const {code} = req.body
+
+    //3) hash code to compare it with the hased one in db
+     const hashedCode = crypto.createHash('sha256').update(code).digest('hex')
+    //4)check if user with this code is exist
+    const user = await User.findOne({resetCode:hashedCode,resetCodeExpiry:{$gt:Date.now()}})
+    if(user === null){
+        return next(new ApiError('BadRequest',400,true,'reset code invalid or expired '))
+    }
+
+    user.resetCodeVerified = true
+    await user.save()
+
+    //5)send response
+    return res.status(200).json({
+        status:'success',
+        message:"code verified successfully"
+    })
+
+ 
+}
+
+
+
+
