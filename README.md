@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="https://github.com/aboodmagdy1/Traning_Cycles/tree/master/pictures/training-and-development-1.jpg" alt="Food App image" width="200">
+  <img src="https://github.com/aboodmagdy1/Traning_Cycles/blob/master/pictures/training-and-development-1.jpg" alt="Traning image" width="200">
   <br>
     Traning Cycles
 
@@ -34,7 +34,7 @@
 
 
 ## Setting Up Your Local Environment ⚙️
-![demo-env-file](https://github.com/aboodmagdy1/Traning_Cycles/tree/master/pictures/envVars.png)
+![demo-env-file](https://github.com/aboodmagdy1/Traning_Cycles/blob/master/pictures/envVars.png)
 
 ## Installation 🛠️
 You can fork the app or you can git-clone the app into your local machine. Once done, please install all the
