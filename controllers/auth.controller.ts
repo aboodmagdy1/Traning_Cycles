@@ -73,10 +73,7 @@ export const forgetPassword =  async (req:Request,res:Response,next:NextFunction
     user.resetCodeExpiry = expireIn
      await user.save()
    //5)send reset code by email
-    const emailMessage =` Hi ${user.name},
-     \nWe received a request to reset the password on your Traning  Account 
-     \n\n ${code}
-      \n\n Enter this code to complete the reset password operation `;
+    const emailMessage =` Hi ${user.name},\nWe received a request to reset the password on your Traning  Account \n ${code}\n Enter this code to complete the reset password operation `;
     try{
         await sendEmail({
             to:email,
@@ -130,4 +127,31 @@ export const verifyResetCode =  async (req:Request,res:Response,next:NextFunctio
 
 
 
+export const resetPassword =  async (req:Request,res:Response,next:NextFunction)=>{
 
+//1)validate the inputs 
+const {email , password} = req.body
+//2) find the user with this email 
+   const user = await User.findOne({email:email})
+   if(user === null){
+    return next(new ApiError('BadRequest',400,true,'user with this email not found'))
+   }
+
+   if(!user.resetCodeVerified){
+    return next (new ApiError('BadRequest',400,true,'reset Code not verified'))
+   }
+//3)update password
+user.password = password
+//4)edit the resetCode field to undefined 
+user.resetCode = undefined
+user.resetCodeExpiry= undefined
+user.resetCodeVerified = false
+
+await user.save()
+//5)send response
+return res.status(200).json({
+    status:'success',
+    message:"password reseted successfully"
+})
+    
+}

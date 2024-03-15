@@ -79,3 +79,17 @@ export class VerifyCodeDto {
   })
   code: string;
 }
+
+
+export class ResetPasswordDto extends ForgetPasswordDto {
+  @IsNotEmpty()
+  @IsString()
+  @Length(6, 15, { message: "password must be from 6-15 char" })
+  password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Validate(PasswordMatches, { message: "confirmPassword must match password" })
+  confirmPassword: string;
+
+}

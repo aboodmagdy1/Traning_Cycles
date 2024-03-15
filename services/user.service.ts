@@ -6,14 +6,13 @@ import {ApiError} from "../utils/AppError";
 
 export const createUser =async (createUserInputs:CreateUserDto)=>{
     const {email,name,password ,phone} = createUserInputs
-    //1)hash password
-    const hashedPassword = await bcrypt.hash(password,12)
-    //2)create user
+
+    //1)create user
     const newUser = await User.create({
         name ,
         email,
         phone,
-        password:hashedPassword
+        password:password
     })
    return newUser
 
