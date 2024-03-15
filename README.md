@@ -12,10 +12,9 @@
 ## Key Features 📝
 
 #### Authentication and Authorization
-  - **For Customer**
-    - Signup , Login 
-    - Foreget , Reset Password
-  
+  - Signup , Login 
+  - Foreget , Reset Password 
+  - Verify Rest Code
     
 #### DTO Design Pattern
 
